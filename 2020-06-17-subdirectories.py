@@ -1,5 +1,6 @@
 '''
-2020-06-17
+2020-06-17 
+[from www.dailycodingproblem.com]
 
 Suppose we represent our file system by a string in the following manner:
 The string "dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext" represents:
