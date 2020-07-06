@@ -1,6 +1,6 @@
 '''
 2020-06-03
-[from www.dailycodingproblem.com]
+[from www.dailycodingproblem.com #2]
 
 Given an array of integers, return a new array such that each element at index 
 i of the new array is the product of all the numbers in the original array 

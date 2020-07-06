@@ -1,6 +1,6 @@
 '''
 2020-07-05
-[from dailycodingproblem.com]
+[from dailycodingproblem.com #35]
 
 Given an array of strictly the characters 'R', 'G', and 'B', segregate the 
 values of the array so that all the Rs come first, the Gs come second, and the 
