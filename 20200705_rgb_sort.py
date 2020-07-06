@@ -25,7 +25,8 @@ class RGB:
         for i, elem in enumerate(self.array):
             char = str(elem)
 
-            # Set last-place index of current char first
+            # First, set the last-place index of current char where it will be
+            # placed
             if self.indices[char] is not None:
                 self.indices[char] += 1
             else:
@@ -39,7 +40,7 @@ class RGB:
                 else:
                     self.indices['B'] = i
             
-            # Increase indices of chars lower in order
+            # Increase indices of chars lower in order (R < G < B)
             if char in 'RG':
                 if self.indices['B'] is not None:
                     self.indices['B'] += 1
