@@ -1,9 +1,6 @@
 '''
-WORK IN PROGRESS
+2020-07-09
 [from dailycodingproblem.com #34]
-# Log 2020-07-09 
-# -- one test fails
-# -- execution time sped up now by checking permutations in smaller batches
 
 Given a string, find the palindrome that can be made by inserting the fewest 
 number of characters as possible anywhere in the word. If there is more than 
@@ -18,6 +15,9 @@ by adding three letters, but "ecarace" comes first alphabetically.
 As another example, given the string "google", you should return "elgoogle".
 '''
 
+# Solution Comment: 
+# Execution speed is slow if string length >= 10 without repeated chars
+
 from collections import defaultdict
 from itertools import permutations, combinations
 
@@ -29,8 +29,6 @@ def is_palindrome(string):
     return False
 
 def has_original_sequence(candidate, string):
-    """Filter out palindromes where the original string is no longer in its
-    original sequence"""
     copy = list(string)
     for i in range(len(candidate) - 1, -1, -1):
         if len(copy) == 0:
@@ -54,7 +52,6 @@ def permutate_mirror_and_check(candidate, string):
         maybes = [m for m in maybes 
                   if (is_palindrome(m) and has_original_sequence(m, string))]
         palindromes += maybes
-    palindromes.sort(key=lambda x: (len(x), x))
     return palindromes
 
 def palindrome(string):
@@ -62,26 +59,23 @@ def palindrome(string):
     for s in string:
         letters[s] += 1
     
-    basic = ''.join(letters.keys())
-    palindromes = permutate_mirror_and_check(basic, string)
-    
-    expanded_1 = basic
-    for i in range(2, max(letters.values()) + 1):
-        expanded_2 = basic
-        for key in letters:  # problem here, adding keys in specific order 
-                             # not accounting for permutations in order, but
-                             # if add permutations, processing time soars
-            expanded_3 = basic
-            if letters[key] == i:
-                expanded_1 += key
-                expanded_2 += key
-                expanded_3 += key
-                palindromes += permutate_mirror_and_check(expanded_3, string)
-            palindromes += permutate_mirror_and_check(expanded_2, string)
-        palindromes += permutate_mirror_and_check(expanded_1, string)
+    base = ''.join([key for key in letters])
+    palindromes = permutate_mirror_and_check(base, string)
+    if len(palindromes) > 0:
+        palindromes.sort(key=lambda x: (len(x), x))
+        return palindromes[0]
 
-    palindromes.sort(key=lambda x: (len(x), x))
-    return palindromes[0]
+    for i in range(2, max(letters.values()) + 1):
+        letters_to_add = [key for key in letters if letters[key] >= i]
+        for j in range(1, len(letters_to_add) + 1):
+            for c in combinations(letters_to_add, j):
+                expanded = base + ''.join(c)
+                palindromes += permutate_mirror_and_check(expanded, string)
+        if len(palindromes) > 0:
+            palindromes.sort(key=lambda x: (len(x), x))
+            return palindromes[0]
+
+    return ''
 
 
 '''
@@ -105,5 +99,11 @@ palindrome('effort') == 'etrofforte'
 palindrome('leeves') == 'lsevevesl'
 
 # Words with partial palindromes everywhere
-palindrome('ttimidd') == 'ddttimittdd'  # FAIL: returns 'ttimiddimitt'
+palindrome('ttimidd') == 'ddttimittdd'
+
+# Longer words
+palindrome('antiestablishment')
+
+# Empty string returns empty string
+palindrome('') == ''
 '''
