@@ -16,7 +16,8 @@ As another example, given the string "google", you should return "elgoogle".
 '''
 
 # Solution Comment: 
-# Execution speed is slow if string length >= 10 without repeated chars
+# Execution speed is slow if string length ~> 10 without repeated chars 
+# because of using permutations and combinations
 
 from collections import defaultdict
 from itertools import permutations, combinations
@@ -46,34 +47,38 @@ def mirror(string):
     return [single_pivot_mirror, full_mirror]
 
 def permutate_mirror_and_check(candidate, string):
-    palindromes = []
-    for p in permutations(candidate):
+    for p in sorted(permutations(candidate), reverse=True):
         maybes = mirror(''.join(p))
-        maybes = [m for m in maybes 
+        maybes = [m for m in maybes
                   if (is_palindrome(m) and has_original_sequence(m, string))]
-        palindromes += maybes
-    return palindromes
+        maybes.sort(key=lambda x: len(x))
+        if len(maybes) > 0:
+            return maybes[:1]
+    return []
 
 def palindrome(string):
     letters = defaultdict(int)
     for s in string:
         letters[s] += 1
-    
+
     base = ''.join([key for key in letters])
     palindromes = permutate_mirror_and_check(base, string)
     if len(palindromes) > 0:
-        palindromes.sort(key=lambda x: (len(x), x))
         return palindromes[0]
 
     for i in range(2, max(letters.values()) + 1):
-        letters_to_add = [key for key in letters if letters[key] >= i]
-        for j in range(1, len(letters_to_add) + 1):
-            for c in combinations(letters_to_add, j):
-                expanded = base + ''.join(c)
-                palindromes += permutate_mirror_and_check(expanded, string)
+        to_add = [key for key in letters if letters[key] >= i]
+        for j in range(1, len(to_add) + 1):
+            combos = (base + ''.join(c) for c in combinations(to_add, j))
+            batch = (permutate_mirror_and_check(c, string) for c in combos)
+            tops = (sorted(b, key=lambda x: (len(x), x))[:1] for b in batch)
+            for t in tops:
+                palindromes += t
+                palindromes.sort(key=lambda x: (len(x), x))
+                palindromes = palindromes[:1]
         if len(palindromes) > 0:
-            palindromes.sort(key=lambda x: (len(x), x))
             return palindromes[0]
+        base += ''.join(to_add)
 
     return ''
 
@@ -89,20 +94,24 @@ palindrome('stare') == 'erastsare'
 # Words with partial palindromes on the edges
 palindrome('google') == 'elgoogle'  
 palindrome('alool') == 'aloola'  
-palindrome('vvdfaa') == 'aafdvvdfaa'  
+palindrome('vvdfaa') == 'aafdvvdfaa'
 palindrome('aardvark') == 'akrardvdrarka'
 
 # Words with partial palindromes inside
 palindrome('timid') == 'dtimitd'  
 palindrome('ravage') == 'egravarge'
 palindrome('effort') == 'etrofforte'
-palindrome('leeves') == 'lsevevesl'
-
+palindrome('leeves') == 'lesevesel'
+                          
 # Words with partial palindromes everywhere
 palindrome('ttimidd') == 'ddttimittdd'
 
 # Longer words
-palindrome('antiestablishment')
+palindrome('establish') == 'ehsilbatablishe'
+palindrome('establishm') == 'emhsilbatablishme'
+palindrome('establishme') == 'emhsilbatablishme'
+palindrome('establishmen') == 'nemhsilbatablishmen'
+palindrome('establishment')  # TAKES TOO LONG TO EXECUTE
 
 # Empty string returns empty string
 palindrome('') == ''
