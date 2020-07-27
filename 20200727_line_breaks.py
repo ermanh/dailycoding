@@ -1,6 +1,6 @@
 '''
 2020-07-27
-[from dailycodingproblem.com]
+[from dailycodingproblem.com #57]
 
 Given a string s and an integer k, break up the string into multiple lines 
 such that each line has a length of k or less. You must break it up so that 
@@ -36,10 +36,13 @@ def line_breaks(string, k):
 
 line_breaks("the quick brown fox jumps over the lazy dog", 5) == [
     "the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"]
+
 line_breaks("the quick brown fox jumps over the lazy dog", 10) == [
     "the quick", "brown fox", "jumps over", "the lazy", "dog"]
+
 line_breaks("the quick brown fox jumps over the lazy dog", 15) == [
     'the quick brown', 'fox jumps over', 'the lazy dog']
+
 line_breaks("the quick brown fox jumps over the lazy dog", 20) == [
     'the quick brown fox', 'jumps over the lazy', 'dog']
 '''
