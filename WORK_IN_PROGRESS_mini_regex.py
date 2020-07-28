@@ -20,8 +20,40 @@ should return true. The same regular expression on the string "chats" should
 return false.
 '''
 
-
 def match(regex, string):
+    if '**' in regex or regex[0] == '*':
+        raise ValueError('Malformed regex')
+
+    ri = len(regex) - 1
+    si = len(string) - 1
+    anything_any_amount = False
+    something_any_amount = False
+
+    while si > 0:
+        if regex[ri] == '*':
+            if regex[ri - 1] == '.':
+                if ri - 2 > -1:
+                    while string[si] != regex[ri - 2]:
+                        if si - 1 > -1:
+                            si -= 1
+                    ri -= 3
+                    si -= 1
+            else:
+
+        elif regex[ri] == '.':
+            ri -= 1
+            si -= 1
+        else:
+            if regex[ri] == string[si]:
+                ri -= 1
+                si -= 1
+            else:
+                return None
+
+
+
+
+def match2(regex, string):
     if '**' in regex or regex[0] == '*':
         raise ValueError('Malformed regex')
 
