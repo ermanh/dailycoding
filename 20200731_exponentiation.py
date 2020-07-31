@@ -31,11 +31,11 @@ def exponentiate(x, y):
         power *= 2
         exponentiated *= exponentiated
     
-    for _ in range(0, y - power):
+    for _ in range(y - power):
         processing_turns += 1
         exponentiated *= x
 
-    print(processing_turns)
+    print('processing_turns =', processing_turns)
     return exponentiated
 
 
@@ -68,5 +68,5 @@ exponentiate(2, 40) == 2 ** 40        # processing_turns = 13
 exponentiate(2, 33) == 2 ** 33        # processing_turns = 6
 
 exponentiate(21, 23) == 21 ** 23
-round(exponentiate(1.42, 7), 10) == round(1.42 ** 7, 10)
+round(exponentiate(1.42, 7), 10) == round(1.42 ** 7, 10)  
 '''
